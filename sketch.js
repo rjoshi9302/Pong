@@ -14,7 +14,7 @@ class Game {
   this.score = 0;
 
   //paddle stuff
-  //hi pelayo
+  //hi pelayo, Rohit, really. That was kinda cringe. JK lololololololololol. (Now this is cringe :P)
   this.xPaddle = this.windowWidth / 2
   this.yPaddle = this.windowHeight - 100;
   this.paddleWidth = 100;
