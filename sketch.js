@@ -1,99 +1,118 @@
 class Game {
-  constructor(windowHeight, windowWidth) {
-    
-    /*
-    TODO: add two parameters above - windowHeight and windowWidth.
-    Then, set them equal to this.windowHeight and this.windowWidth
-    */
-    
-    this.windowHeight =windowHeight
-    this.windowWidth = windowWidth
-    
-    
-      //General game stuff
-  this.score = 0;
 
-  //paddle stuff
-  //hi rohit
-  this.xPaddle = this.windowWidth / 2
-  this.yPaddle = this.windowHeight - 100;
-  this.paddleWidth = 100;
-  this.paddleHeight = 55;
+  constructor(windowWidth, windowHeight) {
+    this.windowHeight = windowHeight;
+    this.windowWidth = windowWidth;
 
-  //ball change
-  this.xBallChange = 5;
-  this.yBallChange = 5;
+    //ball variables
+    this.xBall = Math.floor(Math.random() * 300) + 50;
+    this.yBall = 50;
+    this.diameter = 50;
+    this.xBallChange = 5;
+    this.yBallChange = 5;
 
-  //ball code
-  this.xBall = Math.floor(Math.random() * 300) + 50;
-  this.yBall = 50;
-  this.diameter = 50;
+    //paddle variables
+    this.xPaddle;
+    this.yPaddle;
+    this.paddleWidth = 100;
+    this.paddleHeight = 25;
+    //general variables
+    this.started = false;
+    this.gameOver = false;
+    this.score = 0;
   }
-  // hello this is rohit
-  play() {
-    /*
-    TODO: Add a this. in front of all of the variables
-    */
+
+  update() {
+    //ball movement
     this.xBall += this.xBallChange;
-  this.yBall += this.yBallChange;
-  if (this.xBall < this.diameter / 2 ||
-    this.xBall > this.windowWidth - 0.5 * this.diameter) {
-    this.xBallChange *= -1;
-  }
-  if (this.yBall < this.diameter / 2 ||
-    this.yBall > this.windowHeight - this.diameter) {
-    this.yBallChange *= -1;
-  }
-  //ball detection against paddle
-  if ((this.xBall > this.xPaddle &&
+    this.yBall += this.yBallChange;
+
+    //wall collision
+    if (this.xBall < this.diameter / 2 ||
+      this.xBall > this.windowWidth - 0.5 * this.diameter) {
+        this.xBallChange *= -1;
+    }
+    if (this.yBall < this.diameter / 2 ||
+      this.yBall > this.windowHeight - this.diameter) {
+        this.yBallChange *= -1;
+    }
+    if (this.yBall > this.windowHeight - this.diameter) {
+        this.gameOver = true;
+      }
+
+    //paddle collision
+    if ((this.xBall > this.xPaddle &&
       this.xBall < this.xPaddle + this.paddleWidth) &&
-    (this.yBall + (this.diameter / 2) >= this.yPaddle)) {
-    this.xBallChange *= -1;
-    this.xBallChange = this.xBallChange - 0.2;
-    this.yBallChange *= -1;
-    this.yBallChange = this.xBallChange - 0.2;
-    this.score++;
-  }
-  fill(5, 255, 20);
-  noStroke();
-  ellipse(this.xBall, this.yBall, this.diameter, this.diameter);
- 
-  fill(0, 255, 255);
-  noStroke();
+      (this.yBall + (this.diameter / 2) >= this.yPaddle)) {
+        this.xBallChange *= -1;
+        this.yBallChange *= -1;
+        this.score++;
+    }
+
+    //ball
+    fill(0, 70, 100);
+    noStroke();
+    ellipse(this.xBall, this.yBall, this.diameter, this.diameter);
+
+    //game control
+    if (!this.started) {
+      this.xPaddle = this.windowWidth / 2;
+      this.yPaddle = this.windowHeight - 100;
+      this.started = true;
+    }
+    fill(0, 255, 255);
+    noStroke();
+    rect(this.xPaddle, this.yPaddle, this.paddleWidth, this.paddleHeight);
     
-  rect(this.xPaddle, this.yPaddle-300, this.paddleWidth, this.paddleHeight);
-  fill(0, 255, 255);
-  textSize(24);
-  text("Score: " + this.score, 10, 25);
+    //display score
+    fill(0, 255, 255);
+    textSize(24);
+    text("Score: " + this.score, 10, 25);
+    
+    //GAMEOVER
+    if (this.gameOver == true) {
+      this.xBall = 50000;
+      this.xPaddle = 70000;
+      fill(0, 255, 255);
+      textSize(40);
+      text("GAME OVER", this.windowWidth/2 - 100, this.windowHeight/2);
+    }
   }
-  
-  
-  movePaddle(moveLeft) {
-    //add a conditional that will determine if the paddle should be shifted left or right
+
+  //paddle side-to-side movement
+  move(moveLeft) {
+    if (moveLeft) {
+      this.xPaddle -= 50;
+    } else {
+      this.xPaddle += 50;
+    }
   }
-  
+
 }
-// hello
-var game;
+
+var game1;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  //TODO: pass in the windowWidth and windowHeight
-  game = new Game(this.windowWidth,this.windowHeight); 
+
+  game1 = new Game(windowWidth, windowHeight);
 }
 
 function draw() {
   background(0);
-  game.play();
-}
 
+  game1.update()
+;}
+
+//controls
 function keyPressed() {
   if (keyCode === LEFT_ARROW) {
-    game.movePaddle(true)
+    game1.move(true);
   } else if (keyCode === RIGHT_ARROW) {
-    game.movePaddle(false)
+    game1.move(false);
   }
 }
 
+//these are just tips for the next step
+//center x and center y, if you change center x and center y to a different value it moves the spac eto another place
  
-
